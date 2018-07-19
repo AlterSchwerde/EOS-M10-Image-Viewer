@@ -110,52 +110,12 @@ namespace Picture_Editor
         #region navigation
         private void button7_Click(object sender, EventArgs e)
         {
-
             FormFactory.NextImage();
-
-            //s_IndexImage = s_IndexImage + 1;
-
-            //if (s_IndexImage > (s_ImageFilenames.Count - 1))
-            //{
-            //    s_IndexImage = s_IndexImage - 1;
-            //    return;
-            //}
-
-            //s_Imagefilename = s_ImageFilenames[s_IndexImage];
-            //FormFactory.FillForm(s_Imagefilename, out m_Orientation);
-            //FormFactory.SetImage(s_Imagefilename, m_Orientation, s_IndexImage + 1);
-
-            //if (checkBox1.Checked)
-            //{
-            //    Image histogram = (Image) HistogramFactory.CreateHistogram(s_Imagefilename);
-            //    histogram = ImageFactory.ResizeImage(histogram, 215, 275);
-            //    pictureBox2.Image = histogram;
-            //}
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-
             FormFactory.PreviousImage();
-
-            //s_IndexImage = s_IndexImage - 1;
-
-            //if (s_IndexImage < 0)
-            //{
-            //    s_IndexImage = s_IndexImage + 1;
-            //    return;
-            //}
-
-            //s_Imagefilename = s_ImageFilenames[s_IndexImage];
-            //FormFactory.FillForm(s_Imagefilename, out m_Orientation);
-            //FormFactory.SetImage(s_Imagefilename, m_Orientation, s_IndexImage + 1);
-
-            //if (checkBox1.Checked)
-            //{
-            //    Image histogram = (Image) HistogramFactory.CreateHistogram(s_Imagefilename);
-            //    histogram = ImageFactory.ResizeImage(histogram, 215, 275);
-            //    pictureBox2.Image = histogram;
-            //}
         }
         #endregion
 
