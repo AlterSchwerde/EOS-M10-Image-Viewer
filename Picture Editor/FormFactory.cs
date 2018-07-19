@@ -181,6 +181,11 @@ namespace Picture_Editor
                 if (aufnamemodus != "")
                     Form1.Textbox13 = aufnamemodus;
 
+                if (aufnamemodus == "HDR")
+                {
+                    MessageBox.Show("HDR");
+                }
+
                 //AF-Betriebsart
                 Form1.Textbox10 = GetNamesAFBetriebsart(Convert.ToInt32(cameraSettings.Values[7]));
 
