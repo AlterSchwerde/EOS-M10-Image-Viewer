@@ -229,5 +229,21 @@ namespace Picture_Editor
         }
         #endregion
 
+
+        public static int? HexstringToInt32(string valHex)
+        {
+            int? valDeci = null;
+
+            try
+            {
+                valDeci = Convert.ToInt32(valHex, 16);
+            }
+            catch
+            {
+
+            }
+
+            return valDeci;
+        }
     }
 }

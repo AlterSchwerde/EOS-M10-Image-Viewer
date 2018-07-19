@@ -216,7 +216,6 @@ namespace Picture_Editor
         #endregion
 
 
-
         #region Properties
         // Dateiname
         public static String Textbox0
@@ -475,6 +474,19 @@ namespace Picture_Editor
             MessageBox.Show("Version: 0.1");
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Form3 tagsForm = new Form3();
+            tagsForm.LoadCameraSettings();
+            tagsForm.Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form3 tagsForm = new Form3();
+            tagsForm.LoadShotInfo();
+            tagsForm.Show();
+        }
     }
 }
 

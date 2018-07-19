@@ -202,7 +202,6 @@ namespace Picture_Editor
                 Makernote shotInfoTags = makernotes[2];
 
                 //auto ISO
-
                 if (shotInfoTags.Values[1] != "0000")
                     Form1.Checkbox2 = true;
                 else
@@ -427,7 +426,7 @@ namespace Picture_Editor
 
 
         #region GetNamesAufnamemodus
-        private static string GetNamesAufnamemodus(string index)
+        public static string GetNamesAufnamemodus(string index)
         {
             string valueName = null;
             switch (index)
@@ -492,7 +491,7 @@ namespace Picture_Editor
 
 
         #region GetNamesAFBetriebsart
-        private static string GetNamesAFBetriebsart(int index)
+        public static string GetNamesAFBetriebsart(int index)
         {
             string valueName = null;
 
@@ -513,7 +512,7 @@ namespace Picture_Editor
 
 
         #region GetNamesAFBereichAuswahlmodus
-        private static string GetNamesAFBereichAuswahlmodus(int index)
+        public static string GetNamesAFBereichAuswahlmodus(int index)
         {
             string valueName = null;
 

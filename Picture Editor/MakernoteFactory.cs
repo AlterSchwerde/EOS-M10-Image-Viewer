@@ -124,7 +124,6 @@ namespace Picture_Editor
                 index++;
             }
 
-
             return dict;
         }
         #endregion
@@ -144,7 +143,6 @@ namespace Picture_Editor
                 dict.Add(index, value);
                 index++;
             }
-
 
             return dict;
         }
@@ -166,7 +164,6 @@ namespace Picture_Editor
                 index++;
             }
 
-
             return dict;
         }
         #endregion
@@ -187,7 +184,6 @@ namespace Picture_Editor
                 index++;
             }
 
-
             return dict;
         }
         #endregion
@@ -207,7 +203,6 @@ namespace Picture_Editor
                 dict.Add(index, value);
                 index++;
             }
-
 
             return dict;
         }

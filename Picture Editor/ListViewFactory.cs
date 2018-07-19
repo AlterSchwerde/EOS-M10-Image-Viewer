@@ -18,9 +18,18 @@ namespace Picture_Editor
                 "0x0245",
                 "0x0245"}));
         }
-        
-       
 
 
+        public static void AddItem(ListView listview, string id, string gg, string tagname, string value, string type)
+        {
+            listview.Items.Add(new ListViewItem(new string[]
+                            {
+                                id,
+                                gg,
+                                tagname,
+                                value,
+                                type}));
+        }
+                            
     }
 }

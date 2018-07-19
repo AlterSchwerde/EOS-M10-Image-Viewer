@@ -93,6 +93,8 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -300,7 +302,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(1378, 678);
+            this.button3.Location = new System.Drawing.Point(1462, 735);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(47, 23);
             this.button3.TabIndex = 35;
@@ -416,9 +418,9 @@
             this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label21.Location = new System.Drawing.Point(1216, 642);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(62, 13);
+            this.label21.Size = new System.Drawing.Size(58, 13);
             this.label21.TabIndex = 52;
-            this.label21.Text = "Objektiv::";
+            this.label21.Text = "Objektiv:";
             // 
             // textBox15
             // 
@@ -559,9 +561,9 @@
             this.label30.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label30.Location = new System.Drawing.Point(1216, 547);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(138, 13);
+            this.label30.Size = new System.Drawing.Size(142, 13);
             this.label30.TabIndex = 71;
-            this.label30.Text = "Belichtungsoptimierung";
+            this.label30.Text = "Belichtungsoptimierung:";
             // 
             // textBox17
             // 
@@ -627,7 +629,7 @@
             this.checkBox1.Checked = true;
             this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox1.Location = new System.Drawing.Point(1223, 684);
+            this.checkBox1.Location = new System.Drawing.Point(1449, 868);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(82, 17);
             this.checkBox1.TabIndex = 43;
@@ -704,12 +706,34 @@
             this.checkBox2.Text = "auto";
             this.checkBox2.UseVisualStyleBackColor = true;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(1221, 678);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(137, 23);
+            this.button1.TabIndex = 74;
+            this.button1.Text = "Canon Camera Settings";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(1364, 678);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(137, 23);
+            this.button2.TabIndex = 75;
+            this.button2.Text = "Canon ShotInfo";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(1548, 930);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.label30);
             this.Controls.Add(this.textBox17);
@@ -771,6 +795,8 @@
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximumSize = new System.Drawing.Size(1564, 969);
+            this.MinimumSize = new System.Drawing.Size(1564, 969);
             this.Name = "Form1";
             this.Text = "EOS M10 Image Viewer";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -850,6 +876,8 @@
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem überToolStripMenuItem;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }
 
