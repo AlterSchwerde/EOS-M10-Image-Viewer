@@ -536,6 +536,10 @@ namespace Picture_Editor
                     tagName = "Focus Continuous";
                     value = CameraSettingsFactory.GetValueFocusContinuous(value);
                 }
+                else if (index == 34)
+                {
+                    tagName = "Image Stabilization";
+                }
 
 
 
