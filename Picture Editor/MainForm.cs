@@ -477,6 +477,14 @@ namespace Picture_Editor
 
         private void button1_Click(object sender, EventArgs e)
         {
+
+            string outputFile = @"c:\temp\camerasettings.txt";
+            List<Makernote> makernotes = MakernoteFactory.GetMakernotes(s_Imagefilename);
+            Makernote camerasettings = makernotes[0];
+
+            CameraSettingsFactory.PrintCameraSettings(camerasettings, s_Imagefilename, outputFile);
+            //MakernoteFactory.PrintMakernotes(makernotes, s_Imagefilename, outputFile);
+
             Form3 tagsForm = new Form3();
             tagsForm.LoadCameraSettings();
             tagsForm.Show();
@@ -486,6 +494,18 @@ namespace Picture_Editor
         {
             Form3 tagsForm = new Form3();
             tagsForm.LoadShotInfo();
+            tagsForm.Show();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+
+            string outputFile = @"c:\temp\makernotes.txt";
+            List<Makernote> makernotes  = MakernoteFactory.GetMakernotes(s_Imagefilename);
+            MakernoteFactory.PrintMakernotes(makernotes, s_Imagefilename, outputFile);
+
+            Form3 tagsForm = new Form3();
+            tagsForm.LoadMakernotes();
             tagsForm.Show();
         }
     }

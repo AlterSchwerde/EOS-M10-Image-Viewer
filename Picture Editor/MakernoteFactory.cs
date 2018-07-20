@@ -1,16 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Resources;
-using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Windows.Forms;
-using AForge.Math;
 using ExifLib;
-using ExifLibrary;
 
 namespace Picture_Editor
 {
@@ -109,8 +102,88 @@ namespace Picture_Editor
         #endregion
 
 
-        #region GetValuesString
-        public static Dictionary<int, string> GetValuesString(byte[] bytes, bool bigEndian)
+        public static void PrintMakernotes(List<Makernote> makernotes, string filename, string outputfile)
+        {
+            int index = -1;
+            string tagName = null;
+            string values = null;
+            bool isHex;
+            bool bigEndian;
+            string seperator = "----------------------------------------------------------------------";
+
+
+            string output = "Makernotes für Bild: " + Path.GetFileName(outputfile) + Environment.NewLine + Environment.NewLine;
+
+            foreach (Makernote makernote in makernotes)
+            {
+                index = index + 1;
+                tagName = MakernoteFactory.GetNameMakernote(makernote.Id, out isHex, out bigEndian);
+                string firstPart =   "ID: " + makernote.Id + Environment.NewLine + 
+                                     "Tagname: " + tagName + Environment.NewLine +
+                                     "Wert(e): ";
+                values = MakernoteFactory.GetValuesString(makernote, "Wert(e): ".Length);
+                output = output + seperator + Environment.NewLine + firstPart + values + Environment.NewLine + Environment.NewLine;
+            }
+
+            File.WriteAllText(outputfile, output);
+
+        }
+
+
+        public static string GetValuesString(Makernote makernote, int length)
+        {
+            string values = null;
+
+            if (makernote.Type == 2)
+                return makernote.Values[0];
+
+            for (int i = 0; i < makernote.Values.Count; i++)
+            {
+                string value = makernote.Values[i];
+                if (makernote.IsHex)
+                    value = ConverterFactory.HexstringToInt32(value).ToString();
+
+                string blanks = "";
+                blanks = blanks.PadRight(length, ' ');
+                if (values == null)
+                    values = value;
+                else
+                    if (i % 12 == 0)
+                    values = values + ", " + Environment.NewLine + blanks + value;
+                else
+                    values = values + ", " + value;
+            }
+
+            return values;
+        }
+
+
+        public static List<Makernote> GetMakernotes(string filename)
+        {
+            List<Makernote> makernotes = null;
+            Byte[] bytesMakernote = null;
+            try
+            {
+                using (ExifReader reader = new ExifReader(filename))
+                {
+                    reader.GetTagValue<Byte[]>(ExifTags.MakerNote, out bytesMakernote);
+                }
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show("Fehler beim Einlesen der Exif-Tags." + Environment.NewLine + err);
+            }
+
+            makernotes = MakernoteFactory.GetMakernotes(bytesMakernote);
+
+            return makernotes;
+
+        }
+
+
+
+#region GetValuesString
+public static Dictionary<int, string> GetValuesString(byte[] bytes, bool bigEndian)
         {
             Dictionary<int, string> dict = new Dictionary<int, string>();
 

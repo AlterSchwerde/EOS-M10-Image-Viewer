@@ -21,6 +21,96 @@ namespace Picture_Editor
         }
 
 
+        public void LoadMakernotes()
+        {
+            this.Text = "Canon ShotInfo Tags";
+
+            string filename = Form1.Filename;
+
+            if (string.IsNullOrEmpty(filename))
+            {
+                MessageBox.Show("Kein Bild geladen");
+                return;
+            }
+
+            listView1.View = View.Details;
+
+            Image image = Form1.Image;
+            PropertyItem[] prop = image.PropertyItems;
+
+
+            Byte[] bytesMakernote = null;
+
+            try
+            {
+                using (ExifReader reader = new ExifReader(filename))
+                {
+                    reader.GetTagValue<Byte[]>(ExifTags.MakerNote, out bytesMakernote);
+                }
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show("Fehler beim Einlesen der Exif-Tags." + Environment.NewLine + err);
+            }
+
+            List<Makernote> makernotes = MakernoteFactory.GetMakernotes(bytesMakernote);
+
+            int index = -1;
+            string tagName = null;
+            string value = null;
+            string type = null;
+            //Makernote makernote = null;
+
+            bool isHex;
+            bool bigEndian;
+
+            foreach (Makernote makernote in makernotes)
+            {
+                index = index + 1;
+                tagName = MakernoteFactory.GetNameMakernote(makernote.Id, out isHex, out bigEndian);
+                type = "unknown";
+                //value = MakernoteFactory.GetValuesString(makernote);
+                ListViewFactory.AddItem(listView1, makernote.Id, "", tagName, value, makernote.Type.ToString());
+            }
+
+            //index = index + 1;
+            //tagName = MakernoteFactory.GetNameMakernote(makernote.Id, out isHex, out bigEndian);
+            //type = "unknown";
+            //makernote = makernotes[index];
+            //value = MakernoteFactory.GetValuesString(makernote);
+            //ListViewFactory.AddItem(listView1, makernote.Id, "", tagName, value, type);
+
+
+
+
+
+            //// CanonCameraSettings - 1
+            //index = index + 1;
+            //tagName = "CanonCameraSettings";
+            //type = "unknown";
+            //makernote = makernotes[index];
+            //value = MakernoteFactory.GetValuesString(makernote);
+            //ListViewFactory.AddItem(listView1, makernote.Id, "", tagName, value, type);
+
+            //// CanonFocalLength - 2
+            //index = index + 1;
+            //tagName = "CanonFocalLength";
+            //type = "unknown";
+            //makernote = makernotes[index];
+            //value = MakernoteFactory.GetValuesString(makernote);
+            //ListViewFactory.AddItem(listView1, makernote.Id, "", tagName, value, type);
+
+            // CanonFocalLength - 2
+            
+
+
+            //tagName = MakernoteFactory.GetNameMakernote(makernote.Id, out isHex, out bigEndian);
+
+            listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
+
+        }
+
         public void LoadShotInfo()
         {
             this.Text = "Canon ShotInfo Tags";
@@ -311,311 +401,435 @@ namespace Picture_Editor
 
             listView1.View = View.Details;
 
-            Image image = Form1.Image;
-            PropertyItem[] prop = image.PropertyItems;
-
-
-            Byte[] bytesMakernote = null;
-
-            try
-            {
-                using (ExifReader reader = new ExifReader(filename))
-                {  
-                    reader.GetTagValue<Byte[]>(ExifTags.MakerNote, out bytesMakernote);
-                }
-            }
-            catch (Exception err)
-            {
-                MessageBox.Show("Fehler beim Einlesen der Exif-Tags." + Environment.NewLine + err);
-            }
-
-            List<Makernote> makernotes = MakernoteFactory.GetMakernotes(bytesMakernote);
+            List<Makernote> makernotes  = MakernoteFactory.GetMakernotes(filename);
 
             //-------------------------------------------------------
             //Canon CameraSettings Tags
             Makernote cameraSettings = makernotes[0];
 
-            int index = 0;
+            int index;
             string tagName = null;
-            string value;
+            string value = null;
+            for (int i = 0; i < cameraSettings.Length - 1; i++)
+            {
+                index = i + 1;
+                tagName = CameraSettingsFactory.GetCameraSettingName(index);      
+                value = cameraSettings.Values[index].ToString();
+                value = ConverterFactory.HexstringToInt32(value).ToString();
 
-            // MacroMode - 1
-            index = index + 1;
-            tagName = "MacroMode";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+                if (index == 1)
+                {
+                    tagName = "Makro Mode";
+                    value = CameraSettingsFactory.GetValueMacroMode(value);
+                }
+                else if (index == 3)
+                {
+                    tagName = "Quality";
+                    value = CameraSettingsFactory.GetValueQuality(value);
+                }
+                else if (index == 4)
+                {
+                    tagName = "Canon Flash Mode";
+                    value = CameraSettingsFactory.GetValueFlashMode(value);
+                }
+                else if (index == 5)
+                {
+                    tagName = "Continuous Drive";
+                    value = CameraSettingsFactory.GetValueContinuousDrive(value);
+                }
+                else if (index == 7)
+                {
+                    tagName = "Focus Mode";
+                    value = CameraSettingsFactory.GetValueFocusMode(value);
+                }
+                else if (index == 9)
+                {
+                    tagName = "Record Mode";
+                    value = CameraSettingsFactory.GetValueRecordMode(value);
+                }
+                else if (index == 10)
+                {
+                    tagName = "Canon Image Size";
+                    value = CameraSettingsFactory.GetValueImageSize(value);
+                }
+                else if (index == 11)
+                {
+                    tagName = "Easy Mode";
+                    value = CameraSettingsFactory.GetValueEasyMode(value);
+                }
+                else if (index == 12)
+                {
+                    tagName = "Digital Zoom";
+                    value = CameraSettingsFactory.GetValueDigitalZoom(value);
+                }
+                else if (index == 13)
+                {
+                    tagName = "Contrast";
+                    value = CameraSettingsFactory.GetValueContrast(value);
+                }
+                else if (index == 14)
+                {
+                    tagName = "Saturation";
+                    value = CameraSettingsFactory.GetValueSaturation(value);
+                }
+                else if (index == 16)
+                {
+                    tagName = "Camera ISO";
+                    value = CameraSettingsFactory.GetValueCameraISO(value);
+                }
+                else if (index == 17)
+                {
+                    tagName = "Metering Mode";
+                    value = CameraSettingsFactory.GetValueMeteringMode(value);
+                }
+                else if (index == 18)
+                {
+                    tagName = "Focus Range";
+                    value = CameraSettingsFactory.GetValueFocusRange(value);
+                }
+                else if (index == 19)
+                {
+                    tagName = "Manual AF point selection";
+                    value = cameraSettings.Values[index].ToString();
+                    value = CameraSettingsFactory.GetValueManualAFPointSelection(value);
+                }
+                else if (index == 20)
+                {
+                    tagName = "Canon Exposure Mode";
+                    value = CameraSettingsFactory.GetValueCanonExposureMode(value);
+                }
+                else if (index == 22)
+                {
+                    tagName = "Lens Type";
+                    value = CameraSettingsFactory.GetValueLensType(value);
+                }
+                else if (index == 23)
+                {
+                    tagName = "Max Focal Length";
+                    value = value + " mm";
+                }
+                else if (index == 24)
+                {
+                    tagName = "Mim Focal Length";
+                    value = value + " mm";
+                }
+                else if (index == 25)
+                {
+                    tagName = "Focal Units";
+                    value = value + "/mm";
+                }
+                else if (index == 26)
+                {
+                    tagName = "Max Aperture";
+                }
+                else if (index == 27)
+                {
+                    tagName = "Min Aperture";
+                }
+                else if (index == 29)
+                {
+                    tagName = "Flash Bits";
+                    value = CameraSettingsFactory.GetValueLensType(value);
+                }
+                else if (index == 32)
+                {
+                    tagName = "Focus Continuous";
+                    value = CameraSettingsFactory.GetValueFocusContinuous(value);
+                }
 
-            // SelfTimer - 2 
-            index = index + 1;
-            tagName = "SelfTimer";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
 
-            // Quality - 3
-            index = index + 1;
-            tagName = "Quality";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
 
-            // CanonFlashMode - 4
-            index = index + 1;
-            tagName = "CanonFlashMode";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
 
-            // ContinuousDrive - 5
-            index = index + 1;
-            tagName = "ContinuousDrive";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
 
-            // unknown - 6
-            index = index + 1;
-            tagName = "unknown";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
+                else
+                    continue;
 
-            // FocusMode - 7
-            index = index + 1;
-            tagName = "FocusMode";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // unknown - 8
-            index = index + 1;
-            tagName = "unknown";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknwon");
-
-            // RecordMode - 9
-            index = index + 1;
-            tagName = "RecordMode";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // CanonImageSize - 10
-            index = index + 1;
-            tagName = "CanonImageSize";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // EasyMode - 11
-            index = index + 1;
-            tagName = "EasyMode";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // DigitalZoom - 12
-            index = index + 1;
-            tagName = "DigitalZoom";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // Contrast - 13
-            index = index + 1;
-            tagName = "Contrast";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // Saturation - 14
-            index = index + 1;
-            tagName = "Saturation";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // Sharpness - 15
-            index = index + 1;
-            tagName = "Sharpness";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // CameraISO - 16
-            index = index + 1;
-            tagName = "CameraISO";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // MeteringMode - 17
-            index = index + 1;
-            tagName = "MeteringMode";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // FocusRange - 18
-            index = index + 1;
-            tagName = "FocusRange";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	AFPoint - 19
-            index = index + 1;
-            tagName = "	AFPoint";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	CanonExposureMode - 20
-            index = index + 1;
-            tagName = "	CanonExposureMode";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	unknown - 21
-            index = index + 1;
-            tagName = "	unknown";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
-
-            // 	LensType - 22
-            index = index + 1;
-            tagName = "	LensType";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16u");
-
-            // 	MaxFocalLength - 23
-            index = index + 1;
-            tagName = "	MaxFocalLength";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16u");
-
-            // 	MinFocalLength - 24
-            index = index + 1;
-            tagName = "	MinFocalLength";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16u");
-
-            // 	FocalUnits - 25
-            index = index + 1;
-            tagName = "	FocalUnits";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	MaxAperture - 26
-            index = index + 1;
-            tagName = "	MaxAperture";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	MinAperture - 27
-            index = index + 1;
-            tagName = "	MinAperture";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	FlashActivity - 28
-            index = index + 1;
-            tagName = "	FlashActivity";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	FlashBits - 29
-            index = index + 1;
-            tagName = "	FlashBits";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	unknown - 30
-            index = index + 1;
-            tagName = "	unknown";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
-        
-            // 	unknown - 31
-            index = index + 1;
-            tagName = "	unknown";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
-
-            // 	FocusContinuous - 32
-            index = index + 1;
-            tagName = "	FocusContinuous";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	AESetting - 33
-            index = index + 1;
-            tagName = "	AESetting";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	ImageStabilization - 34
-            index = index + 1;
-            tagName = "	ImageStabilization";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	DisplayAperture - 35
-            index = index + 1;
-            tagName = "	DisplayAperture";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	ZoomSourceWidth - 36
-            index = index + 1;
-            tagName = "	ZoomSourceWidth";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	ZoomTargetWidth - 37
-            index = index + 1;
-            tagName = "ZoomTargetWidth";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	unknown - 38
-            index = index + 1;
-            tagName = "unknown";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
-
-            // 	SpotMeteringMode - 39
-            index = index + 1;
-            tagName = "SpotMeteringMode";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	PhotoEffect - 40
-            index = index + 1;
-            tagName = "PhotoEffect";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	ManualFlashOutput - 41
-            index = index + 1;
-            tagName = "ManualFlashOutput";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	ColorTone - 42
-            index = index + 1;
-            tagName = "ColorTone";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
-
-            // 	unknown - 43
-            index = index + 1;
-            tagName = "unknown";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
-
-            // 	unknown - 44
-            index = index + 1;
-            tagName = "unknown";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
-
-            // 	unknown - 45
-            index = index + 1;
-            tagName = "unknown";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
-
-            // 	SRAWQuality - 46
-            index = index + 1;
-            tagName = "SRAWQuality";
-            value = cameraSettings.Values[index].ToString();
-            ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+                ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+            }
 
             listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
+            //int index = 0;
+            //string tagName = null;
+            //string value;
+
+            //// MacroMode - 1
+            //index = index + 1;
+            //tagName = "MacroMode";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// SelfTimer - 2 
+            //index = index + 1;
+            //tagName = "SelfTimer";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// Quality - 3
+            //index = index + 1;
+            //tagName = "Quality";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// CanonFlashMode - 4
+            //index = index + 1;
+            //tagName = "CanonFlashMode";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// ContinuousDrive - 5
+            //index = index + 1;
+            //tagName = "ContinuousDrive";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// unknown - 6
+            //index = index + 1;
+            //tagName = "unknown";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
+
+            //// FocusMode - 7
+            //index = index + 1;
+            //tagName = "FocusMode";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// unknown - 8
+            //index = index + 1;
+            //tagName = "unknown";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknwon");
+
+            //// RecordMode - 9
+            //index = index + 1;
+            //tagName = "RecordMode";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// CanonImageSize - 10
+            //index = index + 1;
+            //tagName = "CanonImageSize";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// EasyMode - 11
+            //index = index + 1;
+            //tagName = "EasyMode";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// DigitalZoom - 12
+            //index = index + 1;
+            //tagName = "DigitalZoom";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// Contrast - 13
+            //index = index + 1;
+            //tagName = "Contrast";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// Saturation - 14
+            //index = index + 1;
+            //tagName = "Saturation";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// Sharpness - 15
+            //index = index + 1;
+            //tagName = "Sharpness";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// CameraISO - 16
+            //index = index + 1;
+            //tagName = "CameraISO";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// MeteringMode - 17
+            //index = index + 1;
+            //tagName = "MeteringMode";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// FocusRange - 18
+            //index = index + 1;
+            //tagName = "FocusRange";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	AFPoint - 19
+            //index = index + 1;
+            //tagName = "	AFPoint";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	CanonExposureMode - 20
+            //index = index + 1;
+            //tagName = "	CanonExposureMode";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	unknown - 21
+            //index = index + 1;
+            //tagName = "	unknown";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
+
+            //// 	LensType - 22
+            //index = index + 1;
+            //tagName = "	LensType";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16u");
+
+            //// 	MaxFocalLength - 23
+            //index = index + 1;
+            //tagName = "	MaxFocalLength";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16u");
+
+            //// 	MinFocalLength - 24
+            //index = index + 1;
+            //tagName = "	MinFocalLength";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16u");
+
+            //// 	FocalUnits - 25
+            //index = index + 1;
+            //tagName = "	FocalUnits";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	MaxAperture - 26
+            //index = index + 1;
+            //tagName = "	MaxAperture";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	MinAperture - 27
+            //index = index + 1;
+            //tagName = "	MinAperture";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	FlashActivity - 28
+            //index = index + 1;
+            //tagName = "	FlashActivity";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	FlashBits - 29
+            //index = index + 1;
+            //tagName = "	FlashBits";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	unknown - 30
+            //index = index + 1;
+            //tagName = "	unknown";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
+
+            //// 	unknown - 31
+            //index = index + 1;
+            //tagName = "	unknown";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
+
+            //// 	FocusContinuous - 32
+            //index = index + 1;
+            //tagName = "	FocusContinuous";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	AESetting - 33
+            //index = index + 1;
+            //tagName = "	AESetting";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	ImageStabilization - 34
+            //index = index + 1;
+            //tagName = "	ImageStabilization";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	DisplayAperture - 35
+            //index = index + 1;
+            //tagName = "	DisplayAperture";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	ZoomSourceWidth - 36
+            //index = index + 1;
+            //tagName = "	ZoomSourceWidth";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	ZoomTargetWidth - 37
+            //index = index + 1;
+            //tagName = "ZoomTargetWidth";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	unknown - 38
+            //index = index + 1;
+            //tagName = "unknown";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
+
+            //// 	SpotMeteringMode - 39
+            //index = index + 1;
+            //tagName = "SpotMeteringMode";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	PhotoEffect - 40
+            //index = index + 1;
+            //tagName = "PhotoEffect";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	ManualFlashOutput - 41
+            //index = index + 1;
+            //tagName = "ManualFlashOutput";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	ColorTone - 42
+            //index = index + 1;
+            //tagName = "ColorTone";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+            //// 	unknown - 43
+            //index = index + 1;
+            //tagName = "unknown";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
+
+            //// 	unknown - 44
+            //index = index + 1;
+            //tagName = "unknown";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
+
+            //// 	unknown - 45
+            //index = index + 1;
+            //tagName = "unknown";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "unknown");
+
+            //// 	SRAWQuality - 46
+            //index = index + 1;
+            //tagName = "SRAWQuality";
+            //value = cameraSettings.Values[index].ToString();
+            //ListViewFactory.AddItem(listView1, index.ToString(), "", tagName, value, "int16s");
+
+
 
             ////Aufnahmemodus
             //string aufnamemodus = FormFactory.GetNamesAufnamemodus(cameraSettings.Values[11]);
